@@ -26,7 +26,7 @@
         <!-- Right-sided navbar links. Hide them on small screens -->
         <div class="w3-right w3-hide-small">
           <a href="#reviews" class="w3-bar-item w3-button">reviews</a>
-          <a href="login.php" class="w3-bar-item w3-button guests">Login</a>
+          <a href="login.html" class="w3-bar-item w3-button guests">Login</a>
           <button class="w3-bar-item w3-button users" style="display: none;" onclick="logout()">Logout</button>
         </div>
       </div>
@@ -58,5 +58,30 @@
   <script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
 
 </body>
+
+<script>
+  if (get_logged_user_id()) {
+    toastr.success('welcome');
+    $('.guests').hide();
+    $('.users').show();
+  }
+
+  function logout() {
+    window.localStorage.clear();
+    $('.guests').show();
+    $('.users').hide();
+    toastr.success("you have logged out!");
+    location.reload();
+  }
+
+  function get_logged_user_id() {
+    var user = window.localStorage.getItem("user");
+    if (user) {
+      return true;
+    } else {
+      return null;
+    }
+  }
+</script>
 
 </html>
