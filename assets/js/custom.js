@@ -6,7 +6,7 @@ $(document).ready(function () {
 
   // define routes
   app.route({ view: 'main', load: 'main.html' });
-  app.route({ view: 'about', load: 'about.html' });
+  app.route({ view: 'reviews', load: 'reviews.html' });
 
   // run app
   app.run();

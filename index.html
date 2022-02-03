@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" />
+  <link rel="stylesheet" href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
 
 </head>
 
@@ -25,9 +26,7 @@
           <a href="#main" class="w3-bar-item w3-button">Gourmet au Catering</a>
           <!-- Right-sided navbar links. Hide them on small screens -->
           <div class="w3-right w3-hide-small">
-            <a href="#about" class="w3-bar-item w3-button">About</a>
-            <a href="#menu" class="w3-bar-item w3-button">Menu</a>
-            <a href="#contact" class="w3-bar-item w3-button">Contact</a>
+            <a href="#reviews" class="w3-bar-item w3-button">reviews</a>
             <a href="login.php" class="w3-bar-item w3-button guests">Login</a>
             <button class="w3-bar-item w3-button users" style="display: none;" onclick="logout()">Logout</button>
           </div>
@@ -37,7 +36,7 @@
   </nav>
 
   <main id="spapp" role="main">
-    <section id="about"></section>
+    <section id="reviews"></section>
     <section id="view_3">
       <h1>view 3</h1>
     </section>
@@ -47,16 +46,18 @@
     <section id="main" data-load="main.html"></section>
   </main>
 
+  <!-- Jquery -->
   <script src="https://code.jquery.com/jquery-3.1.0.min.js"
     integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
 
+  <!-- spapp JS -->
   <script src="assets/js/jquery.spapp.js"></script>
   <script src="assets/js/custom.js"></script>
 
-  <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.1/dist/jquery.validate.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+  <script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
 
 </body>
 

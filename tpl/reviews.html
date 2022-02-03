@@ -1,0 +1,247 @@
+<div style="margin-top: 10%;" class="container">
+    <h1 style="margin-bottom: 5%">
+        <strong>Reviews</strong>
+    </h1>
+    <div class="row">
+        <div class="col-10">
+            <table id="myTable" class="display">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Review</th>
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody id="reviews_content">
+                </tbody>
+            </table>
+        </div>
+        <div class="col">
+            <div class="add_review_btn">
+                <button id="add_review_btn" type="button" class="btn btn-info" data-toggle="modal"
+                    data-target="#myModal">Add Review</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- add review modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content" id="myModal">
+
+                <form id="add_review_form" action="#">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="name" class="form-control"></input>
+                        </div>
+                        <div>
+                            <label for="review">Review</label>
+                            <input type="text" id="review" name="review" class="form-control"></input>
+                        </div>
+                    </div>
+                    <div class="error"><span></span></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content" id="editModal">
+
+                <form id="edit_form">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" id="id" name="id" class="form-control" hidden></input>
+                        <input type="text" id="userId" name="userId" class="form-control" hidden></input>
+                        <div>
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="name" class="form-control"></input>
+                        </div>
+                        <div>
+                            <label for="review">Review</label>
+                            <input type="text" id="review" name="review" class="form-control"></input>
+                        </div>
+                    </div>
+                    <div class="error"><span></span></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" id="close_button"
+                            data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+
+    //    get reviews function from database
+    function getReviews() {
+        $.ajax({
+            url: "rest/reviews",
+            type: "GET",
+            success: function (data) {
+                var reviews_html = '';
+                for (var i = 0; i < data.length; i++) {
+                    reviews_html += '<tr> <td>' + data[i].name + '</td>';
+                    reviews_html += '<td>' + data[i].review + '</td>';
+                    reviews_html += '<td><button type="button" id="edit_review_btn" class="btn btn-info"  onclick="open_edit_modal(' + data[i].id + ');">Edit</button></td>';
+                    reviews_html += '<td><button type="button" id="delete_review_btn" class="btn btn-danger" onclick="delete_review(' + data[i].id + ');">Delete</button></td> </tr>';
+                }
+                $("#reviews_content").html(reviews_html);
+            },
+            error: function (data) {
+                toastr.error(data.responseText);
+            }
+        });
+    }
+
+    getReviews();
+
+    //    add a review form validation
+    $("#add_review_form").validate({
+        focusCleanup: true,
+        errorElement: "em",
+        rules: {
+            name: 'required',
+            review: 'required',
+        },
+        messages: {
+            name: 'This field is required',
+            review: 'This field is required',
+        },
+        highlight: function (element, errorClass) {
+            $(element).fadeOut(function () {
+                $(element).fadeIn();
+            });
+        },
+        errorContainer: "#messageBox1, #messageBox2",
+        errorLabelContainer: "#messageBox1 ul",
+        wrapper: "li",
+        submitHandler: function (form, validator) {
+            $.post('rest/reviews', $("#add_review_form").serialize()).done(function () {
+                toastr.success('Your Review has been added, Thank you for you feedback');
+                $('#myModal').modal('toggle');
+                getReviews();
+            }).fail(function () {
+                toastr.error('Review not added, please retry again');
+            });
+        },
+        invalidHandler: function (event, validator) {
+            var errors = validator.numberOfInvalids();
+            toastr.error("Error");
+            if (errors) {
+                var message = errors == 1
+                    ? 'You missed 1 field.'
+                    : 'You missed ' + errors + ' fields.';
+                $("div.error span").html(message);
+                $("div.error").show();
+            } else {
+                $("div.error").hide();
+            }
+        }
+    });
+
+    // edit a review form validation
+    $("#edit_form").validate({
+        focusCleanup: true,
+        errorElement: "em",
+        rules: {
+            name: 'required',
+            review: 'required',
+        },
+        messages: {
+            name: 'This field is required',
+            review: 'This field is required',
+        },
+        highlight: function (element, errorClass) {
+            $(element).fadeOut(function () {
+                $(element).fadeIn();
+            });
+        },
+        errorContainer: "#messageBox1, #messageBox2",
+        errorLabelContainer: "#messageBox1 ul",
+        wrapper: "li",
+        submitHandler: function (form, validator) {
+            $.post('rest/review', $("#edit_form").serialize()).done(function () {
+                toastr.success('Review updated');
+                $('#editModal').modal('toggle');
+                getReviews();
+            }).fail(function () {
+                toastr.error('Review is not updated');
+            });
+        },
+        invalidHandler: function (event, validator) {
+            var errors = validator.numberOfInvalids();
+            toastr.error("Error");
+            if (errors) {
+                var message = errors == 1
+                    ? 'You missed 1 field.'
+                    : 'You missed ' + errors + ' fields.';
+                $("div.error span").html(message);
+                $("div.error").show();
+            } else {
+                $("div.error").hide();
+            }
+        }
+    });
+
+
+    //  delete review function
+    function delete_review(id) {
+        $.ajax({
+            url: 'rest/review/' + id,
+            method: 'DELETE',
+            success: function (result) {
+                getReviews();
+                toastr.success('Deleted');
+
+            },
+            error: function () {
+                toastr.error('Not deleted');
+            }
+        });
+    }
+
+    // get a single review
+    function get_review(id) {
+        $.get('rest/review?id=' + id, function (data) {
+        });
+    }
+
+    // opens edit modal when edit button is clicked
+    function open_edit_modal(id) {
+        $('#editModal').modal('toggle');
+        $.get('rest/review?id=' + id, function (data) {
+            $("#edit_form input[name=id]").val(data.id);
+            $("#edit_form input[name=userId]").val(data.userId);
+            $("#edit_form input[name=review]").val(data.review);
+            $("#edit_form input[name=name]").val(data.name);
+        });
+    }
+
+</script>

@@ -39,7 +39,7 @@
     <div class="w3-row w3-padding-64" id="menu">
         <div class="w3-col l6 w3-padding-large">
             <h1 class="w3-center">Our Menu</h1><br>
-            <h4>Bread Basket</h4>
+            <h4></h4>
             <p class="w3-text-grey">Assortment of fresh baked fruit breads and muffins 5.50</p><br>
 
             <h4>Honey Almond Granola with Fruits</h4>
@@ -93,31 +93,21 @@
             class="w3-hover-text-green">w3.css</a></p>
 </footer>
 
-<!-- 
 <script>
-
-    if (get_logged_user_id()) {
-        let name = window.localStorage.getItem("user");
-        toastr.success(name, 'welcome');
-        $('.guests').hide();
-        $('.users').show();
+    function getMenus() {
+        $.ajax({
+            url: "rest/menus",
+            type: "GET",
+            success: function (data) {
+                var menus = data;
+            },
+            error: function (data) {
+                toastr.error(data.responseText);
+            }
+        });
     }
 
-
-    function logout() {
-        localStorage.clear();
-        $('.guests').show();
-        $('.users').hide();
-    }
-
-    function get_logged_user_id() {
-        var user = window.localStorage.getItem("user");
-        if (user) {
-            return user;
-        } else {
-            return null;
-        }
-    }
-</script> -->
+    getMenus();
+</script>
 
 </html>
