@@ -46,7 +46,7 @@ Flight::route('POST /contact', function(){
 
 Flight::route('POST /review', function(){
   $request = Flight::request()->data->getData();
-  $id = Flight::request()->query['id'];
+  $id = $request['id'];
   Flight::review_dao()->update_review($request, $id);
   Flight::json('Updated');
 });

@@ -71,7 +71,6 @@
                     </div>
                     <div class="modal-body">
                         <input type="text" id="id" name="id" class="form-control" hidden></input>
-                        <input type="text" id="userId" name="userId" class="form-control" hidden></input>
                         <div>
                             <label for="name">Name</label>
                             <input type="text" id="name" name="name" class="form-control"></input>
@@ -146,6 +145,8 @@
             $.post('rest/reviews', $("#add_review_form").serialize()).done(function () {
                 toastr.success('Your Review has been added, Thank you for you feedback');
                 $('#myModal').modal('toggle');
+                $("#add_review_form input[name=name]").val("");
+                $("#add_review_form input[name=review]").val("");
                 getReviews();
             }).fail(function () {
                 toastr.error('Review not added, please retry again');
@@ -236,11 +237,10 @@
     // opens edit modal when edit button is clicked
     function open_edit_modal(id) {
         $('#editModal').modal('toggle');
-        $.get('rest/review?id=' + id, function (data) {
-            $("#edit_form input[name=id]").val(data.id);
-            $("#edit_form input[name=userId]").val(data.userId);
-            $("#edit_form input[name=review]").val(data.review);
-            $("#edit_form input[name=name]").val(data.name);
+        $.get('rest/review? id=' + id, function (data) {
+            $("#edit_form input[name=id]").val(data[0].id);
+            $("#edit_form input[name=review]").val(data[0].review);
+            $("#edit_form input[name=name]").val(data[0].name);
         });
     }
 
